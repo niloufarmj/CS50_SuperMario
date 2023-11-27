@@ -16,6 +16,9 @@ TILE_SIZE = 16
 SKY = 2
 GROUND = 1
 
+CHARACTER_WIDTH = 16
+CHARACTER_HEIGHT = 20
+
 local mapWidth = 20
 local mapHeight = 20
 
@@ -45,6 +48,14 @@ function love.load()
             })
         end
     end
+
+    -- texture for the character
+    characterSheet = love.graphics.newImage('assets/character.png')
+    characterQuads = GenerateQuads(characterSheet, CHARACTER_WIDTH, CHARACTER_HEIGHT)
+
+    -- place character in middle of the screen, above the top ground tile
+    characterX = WINDOW.VIRTUAL_WIDTH / 2 - (CHARACTER_WIDTH / 2)
+    characterY = ((6 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
 
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -100,6 +111,9 @@ function love.draw()
             love.graphics.draw(tilesheet, quads[tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
         end
     end
+
+    -- draw character
+    love.graphics.draw(characterSheet, characterQuads[1], characterX, characterY)
     
     push:finish()
 end
