@@ -1,5 +1,9 @@
-require 'src/Util'
+Class = require 'lib/class'
 push = require 'lib/push'
+
+require 'src/Util'
+require 'src/Animation'
+
 
 WINDOW = {
     WIDTH = 1280,
@@ -16,12 +20,14 @@ GROUND = 1
 
 CHARACTER_WIDTH = 16
 CHARACTER_HEIGHT = 20
-CHARACTER_MOVE_SPEED = 70
+CHARACTER_MOVE_SPEED = 40
 
 local mapWidth = 20
 local mapHeight = 20
 
 local cameraX = 0  -- Initial camera position
+
+local currentAnimation
 
 function love.load()
     math.randomseed(os.time())
@@ -51,6 +57,12 @@ function love.load()
     characterSheet = love.graphics.newImage('assets/character.png')
     characterQuads = GenerateQuads(characterSheet, CHARACTER_WIDTH, CHARACTER_HEIGHT)
 
+    -- Create idle and moving animations
+    idleAnimation = Animation({frames = {1}, interval = 1})
+    movingAnimation = Animation({frames = {10, 11}, interval = 0.2})
+    direction = 'right'
+    currentAnimation = idleAnimation
+
     -- place character in middle of the screen, above the top ground tile
     characterX = WINDOW.VIRTUAL_WIDTH / 2 - (CHARACTER_WIDTH / 2)
     characterY = ((6 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
@@ -62,6 +74,8 @@ function love.load()
         resizable = true,
         vsync = true
     })
+
+    
 end
 
 function love.resize(w, h)
@@ -76,12 +90,18 @@ end
 
 
 function love.update(dt)
-
+    currentAnimation:update(dt)
     -- Update player position based on input
     if love.keyboard.isDown('right') then
         characterX = characterX + CHARACTER_MOVE_SPEED * dt
+        direction = 'right'
+        currentAnimation = movingAnimation
     elseif love.keyboard.isDown('left') then
         characterX = characterX - CHARACTER_MOVE_SPEED * dt
+        direction = 'left'
+        currentAnimation = movingAnimation
+    else
+        currentAnimation = idleAnimation
     end
 
     -- Round camera position to whole numbers
@@ -102,9 +122,27 @@ function love.draw()
             love.graphics.draw(tilesheet, quads[tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
         end
     end
+    
+    
+    -- Draw character
+    love.graphics.draw(
+        characterSheet,
+        characterQuads[currentAnimation:getCurrentFrame()],
 
-    -- draw character
-    love.graphics.draw(characterSheet, characterQuads[1], characterX, characterY)
+        -- X and Y we draw at need to be shifted by half our width and height because we're setting the origin
+        -- to that amount for proper scaling, which reverse-shifts rendering
+        math.floor(characterX) + CHARACTER_WIDTH / 2,
+        math.floor(characterY) + CHARACTER_HEIGHT / 2,
+
+        -- 0 rotation, then the X and Y scales
+        0,
+        direction == 'left' and -1 or 1,
+        1,
+
+        -- Lastly, the origin offsets relative to 0,0 on the sprite (set here to the sprite's center)
+        CHARACTER_WIDTH / 2,
+        CHARACTER_HEIGHT / 2
+    )
     
     push:finish()
 end
