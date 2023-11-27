@@ -1,7 +1,5 @@
 require 'src/Util'
 push = require 'lib/push'
-love.keyboard.keysPressed = {}
-love.keyboard.keysReleased = {}
 
 WINDOW = {
     WIDTH = 1280,
@@ -18,12 +16,12 @@ GROUND = 1
 
 CHARACTER_WIDTH = 16
 CHARACTER_HEIGHT = 20
+CHARACTER_MOVE_SPEED = 70
 
 local mapWidth = 20
 local mapHeight = 20
 
 local cameraX = 0  -- Initial camera position
-local cameraSpeed = 100  -- Camera movement speed
 
 function love.load()
     math.randomseed(os.time())
@@ -74,28 +72,21 @@ function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     end
-    
-    love.keyboard.keysPressed[key] = true
 end
 
-function love.keyreleased(key)
-    love.keyboard.keysReleased[key] = true
-end
 
 function love.update(dt)
-    -- Move camera when arrow keys are pressed
+
+    -- Update player position based on input
     if love.keyboard.isDown('right') then
-        cameraX = cameraX + cameraSpeed * dt
+        characterX = characterX + CHARACTER_MOVE_SPEED * dt
     elseif love.keyboard.isDown('left') then
-        cameraX = cameraX - cameraSpeed * dt
+        characterX = characterX - CHARACTER_MOVE_SPEED * dt
     end
-    
+
     -- Round camera position to whole numbers
-    cameraX = math.floor(cameraX + 0.5)
+    cameraX = math.floor(characterX - (WINDOW.VIRTUAL_WIDTH / 2) + (CHARACTER_WIDTH / 2) + 0.5)
     
-    -- Reset keysPressed and keysReleased tables
-    love.keyboard.keysPressed = {}
-    love.keyboard.keysReleased = {}
 end
 
 function love.draw()
