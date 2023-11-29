@@ -29,6 +29,11 @@ local cameraX = 0  -- Initial camera position
 
 local currentAnimation
 
+local isJumping = false
+local jumpVelocity = -200
+local jumpHeight = 30
+local gravity = 800
+
 function love.load()
     math.randomseed(os.time())
 
@@ -60,6 +65,8 @@ function love.load()
     -- Create idle and moving animations
     idleAnimation = Animation({frames = {1}, interval = 1})
     movingAnimation = Animation({frames = {10, 11}, interval = 0.2})
+    jumpAnimation = Animation({frames = {3}, interval = 1})
+
     direction = 'right'
     currentAnimation = idleAnimation
 
@@ -91,22 +98,58 @@ end
 
 function love.update(dt)
     currentAnimation:update(dt)
+
+    -- Check if the character is on the ground
+    local onGround = characterY >= ((6 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
+
     -- Update player position based on input
-    if love.keyboard.isDown('right') then
-        characterX = characterX + CHARACTER_MOVE_SPEED * dt
-        direction = 'right'
-        currentAnimation = movingAnimation
-    elseif love.keyboard.isDown('left') then
-        characterX = characterX - CHARACTER_MOVE_SPEED * dt
-        direction = 'left'
-        currentAnimation = movingAnimation
+
+    if isJumping then
+        if love.keyboard.isDown('right') then
+            characterX = characterX + CHARACTER_MOVE_SPEED * dt
+            direction = 'right'
+            currentAnimation = jumpAnimation
+        elseif love.keyboard.isDown('left') then
+            characterX = characterX - CHARACTER_MOVE_SPEED * dt
+            direction = 'left'
+            currentAnimation = jumpAnimation
+        else
+            currentAnimation = idleAnimation
+        end
+
+        characterY = characterY + jumpVelocity * dt
+        jumpVelocity = jumpVelocity + gravity * dt
+
+        -- Check if the character has landed
+        if characterY >= ((6 - 1) * TILE_SIZE) - CHARACTER_HEIGHT then
+            characterY = ((6 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
+            isJumping = false
+            currentAnimation = idleAnimation
+        end
     else
-        currentAnimation = idleAnimation
+        -- Jumping logic
+        if love.keyboard.isDown('space') and onGround then
+            isJumping = true
+            jumpVelocity = -math.sqrt(2 * gravity * jumpHeight)
+            currentAnimation = jumpAnimation
+        elseif love.keyboard.isDown('right') then
+            characterX = characterX + CHARACTER_MOVE_SPEED * dt
+            direction = 'right'
+            currentAnimation = movingAnimation
+        elseif love.keyboard.isDown('left') then
+            characterX = characterX - CHARACTER_MOVE_SPEED * dt
+            direction = 'left'
+            currentAnimation = movingAnimation
+        else
+            currentAnimation = idleAnimation
+        end
     end
 
+
     -- Round camera position to whole numbers
-    cameraX = math.floor(characterX - (WINDOW.VIRTUAL_WIDTH / 2) + (CHARACTER_WIDTH / 2) + 0.5)
-    
+    cameraX = math.floor(characterX - (WINDOW.VIRTUAL_WIDTH / 2) + (CHARACTER_WIDTH / 2))
+
+    -- ...
 end
 
 function love.draw()
