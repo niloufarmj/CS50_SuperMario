@@ -9,20 +9,12 @@ local cameraX = 0  -- Initial camera position
 local currentAnimation
 
 local isJumping = false
-local jumpVelocity = -200
-local jumpHeight = 30
-local gravity = 800
+local jumpVelocity = -150
+local jumpHeight = 40
+local gravity = 400
 
 function love.load()
     math.randomseed(os.time())
-
-    -- random tile set and topper set for the level
-    tileset = math.random(#tilesets)
-    topperset = math.random(#toppersets)
-
-    backgroundR = math.random(255) / 255
-    backgroundG = math.random(255) / 255
-    backgroundB = math.random(255) / 255
 
     tiles = generateLevel()
 
@@ -40,7 +32,7 @@ function love.load()
 
     -- place character in middle of the screen, above the top ground tile
     characterX = WINDOW.VIRTUAL_WIDTH / 2 - (CHARACTER_WIDTH / 2)
-    characterY = ((6 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
+    characterY = ((7 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
 
 
 
@@ -63,14 +55,19 @@ function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     end
+
+    if key == 'r' then 
+        tiles = generateLevel()
+    end
 end
+
 
 
 function love.update(dt)
     currentAnimation:update(dt)
 
     -- Check if the character is on the ground
-    local onGround = characterY >= ((6 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
+    local onGround = characterY >= ((7 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
 
     -- Update player position based on input
 
@@ -91,8 +88,8 @@ function love.update(dt)
         jumpVelocity = jumpVelocity + gravity * dt
 
         -- Check if the character has landed
-        if characterY >= ((6 - 1) * TILE_SIZE) - CHARACTER_HEIGHT then
-            characterY = ((6 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
+        if characterY >= ((7 - 1) * TILE_SIZE) - CHARACTER_HEIGHT then
+            characterY = ((7 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
             isJumping = false
             currentAnimation = idleAnimation
         end
@@ -166,18 +163,70 @@ function love.draw()
 end
 
 function generateLevel()
+    tileset = math.random(#tilesets)
+    topperset = math.random(#toppersets)
+    backgroundR = math.random(255) / 255
+    backgroundG = math.random(255) / 255
+    backgroundB = math.random(255) / 255
+
     local tiles = {}
 
+    -- create 2D array completely empty first so we can just change tiles as needed
     for y = 1, mapHeight do
         table.insert(tiles, {})
-        
+
         for x = 1, mapWidth do
-            
-            -- sky and bricks; this ID directly maps to whatever quad we want to render
             table.insert(tiles[y], {
-                id = y < 6 and SKY or GROUND,
-                topper = y == 6 and true or false
+                id = 0,
+                topper = false
             })
+        end
+    end
+
+    -- iterate over X at the top level to generate the level in columns instead of rows
+    for x = 1, mapWidth do
+        -- random chance for a pillar
+        local spawnPillar = math.random(5) == 1
+        
+        if spawnPillar then
+            
+            if math.random(1, 2) == 1 then
+                for pillar = 5, 9 do
+                    tiles[pillar][x] = {
+                        id = GROUND,
+                        topper = pillar == 5 and true or false
+                    }
+                end
+            else
+                for pillar = 7, 8 do
+                    tiles[pillar][x] = {
+                        id = SKY,
+                        topper = false
+                    }
+                end
+            end
+        else
+            -- always generate ground
+            for ground = 7, mapHeight do
+                if tiles[ground][x].id == 0 then
+                    tiles[ground][x] = {
+                        id = GROUND,
+                        topper = ground == 7 and true or false
+                    }
+                end
+            end
+        end
+    end
+
+    -- set remaining tiles to sky
+    for y = 1, mapHeight do
+        for x = 1, mapWidth do
+            if tiles[y][x].id == 0 then
+                tiles[y][x] = {
+                    id = SKY,
+                    topper = false
+                }
+            end
         end
     end
 
