@@ -1,26 +1,5 @@
-Class = require 'lib/class'
-push = require 'lib/push'
+require 'src/Dependencies'
 
-require 'src/Util'
-require 'src/Animation'
-
-
-WINDOW = {
-    WIDTH = 1280,
-    HEIGHT = 720,
-    VIRTUAL_WIDTH = 256,
-    VIRTUAL_HEIGHT = 144
-}
-
-TILE_SIZE = 16
-
--- tile ID constants
-SKY = 2
-GROUND = 1
-
-CHARACTER_WIDTH = 16
-CHARACTER_HEIGHT = 20
-CHARACTER_MOVE_SPEED = 40
 
 local mapWidth = 20
 local mapHeight = 20
@@ -37,26 +16,15 @@ local gravity = 800
 function love.load()
     math.randomseed(os.time())
 
-    tiles = {}
-
-    -- tilesheet image and quads for it, which will map to our IDs
-    tilesheet = love.graphics.newImage('assets/tiles.png')
-    quads = GenerateQuads(tilesheet, TILE_SIZE, TILE_SIZE)
+    -- random tile set and topper set for the level
+    tileset = math.random(#tilesets)
+    topperset = math.random(#toppersets)
 
     backgroundR = math.random(255) / 255
     backgroundG = math.random(255) / 255
     backgroundB = math.random(255) / 255
 
-    for y = 1, mapHeight do
-        table.insert(tiles, {})
-
-        for x = 1, mapWidth do
-            -- sky and bricks; this ID directly maps to whatever quad we want to render
-            table.insert(tiles[y], {
-                id = y < 6 and SKY or GROUND
-            })
-        end
-    end
+    tiles = generateLevel()
 
     -- texture for the character
     characterSheet = love.graphics.newImage('assets/character.png')
@@ -73,6 +41,8 @@ function love.load()
     -- place character in middle of the screen, above the top ground tile
     characterX = WINDOW.VIRTUAL_WIDTH / 2 - (CHARACTER_WIDTH / 2)
     characterY = ((6 - 1) * TILE_SIZE) - CHARACTER_HEIGHT
+
+
 
     love.graphics.setDefaultFilter('nearest', 'nearest')
 
@@ -154,15 +124,20 @@ end
 
 function love.draw()
     push:start()
-    love.graphics.clear(backgroundR, backgroundG, backgroundB, 1)
+    
     
     -- Apply camera translation
     love.graphics.translate(-cameraX, 0)
+    love.graphics.clear(backgroundR, backgroundG, backgroundB, 1)
     
     for y = 1, mapHeight do
         for x = 1, mapWidth do
             local tile = tiles[y][x]
-            love.graphics.draw(tilesheet, quads[tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+            love.graphics.draw(tilesheet, tilesets[tileset][tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+
+            if tile.topper then
+                love.graphics.draw(topperSheet, toppersets[topperset][tile.id], (x - 1) * TILE_SIZE, (y - 1) * TILE_SIZE)
+            end
         end
     end
     
@@ -188,4 +163,23 @@ function love.draw()
     )
     
     push:finish()
+end
+
+function generateLevel()
+    local tiles = {}
+
+    for y = 1, mapHeight do
+        table.insert(tiles, {})
+        
+        for x = 1, mapWidth do
+            
+            -- sky and bricks; this ID directly maps to whatever quad we want to render
+            table.insert(tiles[y], {
+                id = y < 6 and SKY or GROUND,
+                topper = y == 6 and true or false
+            })
+        end
+    end
+
+    return tiles
 end
