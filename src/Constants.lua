@@ -16,6 +16,9 @@ CHARACTER_WIDTH = 16
 CHARACTER_HEIGHT = 20
 CHARACTER_MOVE_SPEED = 40
 
+JUMP_SPEED = -150
+JUMP_HEIGHT = 40
+
 -- number of tiles in each tile set
 TILE_SET_WIDTH = 5
 TILE_SET_HEIGHT = 4
@@ -27,3 +30,6 @@ TILE_SETS_TALL = 10
 -- number of topper sets in sheet
 TOPPER_SETS_WIDE = 6
 TOPPER_SETS_TALL = 18
+
+GRAVITY = 400
+
