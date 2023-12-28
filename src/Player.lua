@@ -20,7 +20,7 @@ function Player:checkLeftCollisions(dt)
 
     -- place player outside the X bounds on one of the tiles to reset any overlap
     if (tileTopLeft and tileBottomLeft) and (tileTopLeft:collidable() or tileBottomLeft:collidable()) then
-        self.x = (tileTopLeft.x - 1) * TILE_SIZE + tileTopLeft.width - 1
+        self.x = (tileTopLeft.x - 1) * TILE.SIZE + tileTopLeft.width - 1
     else
         
         -- allow us to walk atop solid objects even if we collide with them
@@ -42,7 +42,7 @@ function Player:checkRightCollisions(dt)
 
     -- place player outside the X bounds on one of the tiles to reset any overlap
     if (tileTopRight and tileBottomRight) and (tileTopRight:collidable() or tileBottomRight:collidable()) then
-        self.x = (tileTopRight.x - 1) * TILE_SIZE - self.width
+        self.x = (tileTopRight.x - 1) * TILE.SIZE - self.width
     else
         
         -- allow us to walk atop solid objects even if we collide with them

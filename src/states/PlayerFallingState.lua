@@ -31,7 +31,7 @@ function PlayerFallingState:update(dt)
             self.player:changeState('idle')
         end
 
-        self.player.y = (tileBottomLeft.y - 1) * TILE_SIZE - self.player.height
+        self.player.y = (tileBottomLeft.y - 1) * TILE.SIZE - self.player.height
     
     -- go back to start if we fall below the map boundary
     elseif self.player.y > WINDOW.VIRTUAL_HEIGHT then

@@ -1,4 +1,3 @@
-
 function GenerateQuads(atlas, tilewidth, tileheight)
     local sheetWidth = atlas:getWidth() / tilewidth
     local sheetHeight = atlas:getHeight() / tileheight
@@ -18,6 +17,9 @@ function GenerateQuads(atlas, tilewidth, tileheight)
     return spritesheet
 end
 
+--[[
+    Divides quads we've generated via slicing our tile sheet into separate tile sets.
+]]
 function GenerateTileSets(quads, setsX, setsY, sizeX, sizeY)
     local tilesets = {}
     local tableCounter = 0

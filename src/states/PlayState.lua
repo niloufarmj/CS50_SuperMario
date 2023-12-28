@@ -26,8 +26,6 @@ function PlayState:init()
         level = self.level
     })
 
-    self:spawnEnemies()
-
     self.player:changeState('falling')
 end
 
@@ -45,21 +43,33 @@ function PlayState:update(dt)
     -- constrain player X no matter which state
     if self.player.x <= 0 then
         self.player.x = 0
-    elseif self.player.x > TILE_SIZE * self.tileMap.width - self.player.width then
-        self.player.x = TILE_SIZE * self.tileMap.width - self.player.width
+    elseif self.player.x > TILE.SIZE * self.tileMap.width - self.player.width then
+        self.player.x = TILE.SIZE * self.tileMap.width - self.player.width
     end
 end
 
 function PlayState:render()
     love.graphics.push()
+    love.graphics.draw(gTextures['backgrounds'], gFrames['backgrounds'][self.background], math.floor(-self.backgroundX), 0)
+    love.graphics.draw(gTextures['backgrounds'], gFrames['backgrounds'][self.background], math.floor(-self.backgroundX),
+        gTextures['backgrounds']:getHeight() / 3 * 2, 0, 1, -1)
+    love.graphics.draw(gTextures['backgrounds'], gFrames['backgrounds'][self.background], math.floor(-self.backgroundX + 256), 0)
+    love.graphics.draw(gTextures['backgrounds'], gFrames['backgrounds'][self.background], math.floor(-self.backgroundX + 256),
+        gTextures['backgrounds']:getHeight() / 3 * 2, 0, 1, -1)
     
-    -- Apply camera translation
-    love.graphics.translate(-cameraX, 0)
+    -- translate the entire view of the scene to emulate a camera
+    love.graphics.translate(-math.floor(self.camX), -math.floor(self.camY))
     
     self.level:render()
 
     self.player:render()
     love.graphics.pop()
+    
+    -- render score
+    love.graphics.setColor(0, 0, 0, 1)
+    love.graphics.print(tostring(self.player.score), 5, 5)
+    love.graphics.setColor(1, 1, 1, 1)
+    love.graphics.print(tostring(self.player.score), 4, 4)
     
 end
 
@@ -67,29 +77,9 @@ function PlayState:updateCamera()
     -- clamp movement of the camera's X between 0 and the map bounds - virtual width,
     -- setting it half the screen to the left of the player so they are in the center
     self.camX = math.max(0,
-        math.min(TILE_SIZE * self.tileMap.width - VIRTUAL_WIDTH,
-        self.player.x - (VIRTUAL_WIDTH / 2 - 8)))
+        math.min(TILE.SIZE * self.tileMap.width - WINDOW.VIRTUAL_WIDTH,
+        self.player.x - (WINDOW.VIRTUAL_WIDTH / 2 - 8)))
 
     -- adjust background X to move a third the rate of the camera for parallax
     self.backgroundX = (self.camX / 3) % 256
-end
-
---[[
-    Adds a series of enemies to the level randomly.
-]]
-function PlayState:spawnEnemies()
-    -- spawn snails in the level
-    for x = 1, self.tileMap.width do
-
-        -- flag for whether there's ground on this column of the level
-        local groundFound = false
-
-        for y = 1, self.tileMap.height do
-            if not groundFound then
-                if self.tileMap.tiles[y][x].id == TILE_ID_GROUND then
-                    groundFound = true
-                end
-            end
-        end
-    end
 end
