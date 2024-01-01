@@ -1,9 +1,9 @@
 
 WINDOW = {
     WIDTH = 1280,
-    HEIGHT = 720,
+    HEIGHT = 640,
     VIRTUAL_WIDTH = 256,
-    VIRTUAL_HEIGHT = 144
+    VIRTUAL_HEIGHT = 128
 }
 
 TILE = {

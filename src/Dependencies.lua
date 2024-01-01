@@ -1,5 +1,6 @@
 Class = require 'lib/class'
 push = require 'lib/push'
+Timer = require 'lib/knife.timer'
 
 require 'src/Util'
 require 'src/Animation'
@@ -13,12 +14,12 @@ require 'src/GameObject'
 require 'src/GameLevel'
 require 'src/LevelMaker'
 require 'src/states/BaseState'
+require 'src/states/StartState'
 require 'src/states/PlayState'
 require 'src/states/PlayerFallingState'
 require 'src/states/PlayerIdleState'
 require 'src/states/PlayerJumpState'
 require 'src/states/PlayerWalkingState'
-require 'src/states/StartState'
 
 gTextures = {
     ['tiles'] = love.graphics.newImage('assets/tiles.png'),
@@ -46,9 +47,13 @@ gFrames = {
 
 
 -- divide quad tables into tile sets
-tilesets = GenerateTileSets(gFrames['tiles'], TILE.SETS_WIDE, TILE.SETS_TALL, TILE.SET_WIDTH, TILE.SET_HEIGHT)
-toppersets = GenerateTileSets(gFrames['toppers'], TOPPER.SETS_WIDE, TOPPER.SETS_TALL, TILE.SET_WIDTH, TILE.SET_HEIGHT)
+gFrames['tilesets'] = GenerateTileSets(gFrames['tiles'], TILE.SETS_WIDE, TILE.SETS_TALL, TILE.SET_WIDTH, TILE.SET_HEIGHT)
+gFrames['toppersets'] = GenerateTileSets(gFrames['toppers'], TOPPER.SETS_WIDE, TOPPER.SETS_TALL, TILE.SET_WIDTH, TILE.SET_HEIGHT)
 
 
-
+gFonts = {
+    ['small'] = love.graphics.newFont('assets/font.ttf', 6),
+    ['medium'] = love.graphics.newFont('assets/font.ttf', 12),
+    ['large'] = love.graphics.newFont('assets/font.ttf', 24)
+}
 

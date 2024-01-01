@@ -9,7 +9,7 @@ function love.load()
         ['play'] = function() return PlayState() end
     }
 
-    gStateMachine:change('play')
+    gStateMachine:change('start')
 
 
     love.graphics.setDefaultFilter('nearest', 'nearest')
@@ -31,6 +31,8 @@ function love.keypressed(key)
     if key == 'escape' then
         love.event.quit()
     end
+
+    love.keyboard.keysPressed[key] = true
 end
 
 function love.update(dt)
