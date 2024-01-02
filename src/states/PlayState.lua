@@ -11,7 +11,6 @@ function PlayState:enter(params)
     self.backgroundX = 0
 
     self.gravityOn = true
-    self.gravityAmount = 6
 
     self.player = Player({
         x = 0, y = 0,
@@ -20,8 +19,8 @@ function PlayState:enter(params)
         stateMachine = StateMachine {
             ['idle'] = function() return PlayerIdleState(self.player) end,
             ['walking'] = function() return PlayerWalkingState(self.player) end,
-            ['jump'] = function() return PlayerJumpState(self.player, self.gravityAmount) end,
-            ['falling'] = function() return PlayerFallingState(self.player, self.gravityAmount) end
+            ['jump'] = function() return PlayerJumpState(self.player) end,
+            ['falling'] = function() return PlayerFallingState(self.player) end
         },
         map = self.tileMap,
         level = self.level

@@ -40,11 +40,11 @@ function PlayerFallingState:update(dt)
     -- check side collisions and reset position
     elseif love.keyboard.isDown('left') then
         self.player.direction = 'left'
-        self.player.x = self.player.x - CHARACTER_MOVE_SPEED * dt
+        self.player.x = self.player.x - CHARACTER.WALK_SPEED * dt
         self.player:checkLeftCollisions(dt)
     elseif love.keyboard.isDown('right') then
         self.player.direction = 'right'
-        self.player.x = self.player.x + CHARACTER_MOVE_SPEED * dt
+        self.player.x = self.player.x + CHARACTER.WALK_SPEED * dt
         self.player:checkRightCollisions(dt)
     end
 
