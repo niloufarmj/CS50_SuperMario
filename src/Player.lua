@@ -30,7 +30,7 @@ function Player:checkLeftCollisions(dt)
 
         -- reset X if new collided object
         if #collidedObjects > 0 then
-            self.x = self.x + CHARACTER_MOVE_SPEED * dt
+            self.x = self.x + CHARACTER.WALK_SPEED * dt
         end
     end
 end
@@ -52,7 +52,7 @@ function Player:checkRightCollisions(dt)
 
         -- reset X if new collided object
         if #collidedObjects > 0 then
-            self.x = self.x - CHARACTER_MOVE_SPEED * dt
+            self.x = self.x - CHARACTER.WALK_SPEED * dt
         end
     end
 end

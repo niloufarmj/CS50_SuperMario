@@ -34,9 +34,9 @@ COLLIDABLE_TILES = {
 CHARACTER = {
     WIDTH = 16,
     HEIGHT = 20,
-    JUMP_SPEED = -100,
-    JUMP_HEIGHT = 40,
-    WALK_SPEED = 40
+    JUMP_SPEED = -250,
+    JUMP_HEIGHT = 150,
+    WALK_SPEED = 50
 }
 
 

@@ -71,76 +71,79 @@ function LevelMaker.generate(width, height)
                 tiles[7][x].topper = nil
             
             -- chance to generate bushes
-            -- elseif math.random(8) == 1 then
-            --     table.insert(objects,
-            --         GameObject {
-            --             texture = 'bushes',
-            --             x = (x - 1) * TILE.SIZE,
-            --             y = (6 - 1) * TILE.SIZE,
-            --             width = 16,
-            --             height = 16,
-            --             frame = BUSH_IDS[math.random(#BUSH_IDS)] + (math.random(4) - 1) * 7,
-            --             collidable = false
-            --         }
-            --     )
+            elseif math.random(8) == 1 then
+                table.insert(objects,
+                    GameObject {
+                        texture = 'bushes',
+                        x = (x - 1) * TILE.SIZE,
+                        y = (6 - 1) * TILE.SIZE,
+                        width = 16,
+                        height = 16,
+                        frame = BUSH_IDS[math.random(#BUSH_IDS)] + (math.random(4) - 1) * 7,
+                        collidable = false
+                    }
+                )
             end
 
             -- chance to spawn a block
-            -- if math.random(10) == 1 then
-            --     table.insert(objects,
+            if math.random(10) == 1 then
+                table.insert(objects,
 
-            --         -- jump block
-            --         GameObject {
-            --             texture = 'jump-blocks',
-            --             x = (x - 1) * TILE.SIZE,
-            --             y = (blockHeight - 1) * TILE.SIZE,
-            --             width = 16,
-            --             height = 16,
+                    -- jump block
+                    GameObject {
+                        texture = 'jump-blocks',
+                        x = (x - 1) * TILE.SIZE,
+                        y = (blockHeight - 1) * TILE.SIZE,
+                        width = 16,
+                        height = 16,
 
-            --             -- make it a random variant
-            --             frame = math.random(#JUMP_BLOCKS),
-            --             collidable = true,
-            --             hit = false,
-            --             solid = true,
+                        -- make it a random variant
+                        frame = math.random(#JUMP_BLOCKS),
+                        collidable = true,
+                        hit = false,
+                        solid = true,
 
-            --             -- collision function takes itself
-            --             onCollide = function(obj)
+                        -- collision function takes itself
+                        onCollide = function(obj)
 
-            --                 -- spawn a gem if we haven't already hit the block
-            --                 if not obj.hit then
+                            -- spawn a gem if we haven't already hit the block
+                            if not obj.hit then
 
-            --                     -- chance to spawn gem, not guaranteed
-            --                     if math.random(5) == 1 then
+                                -- chance to spawn gem, not guaranteed
+                                if math.random(4) == 1 then
 
-            --                         -- maintain reference so we can set it to nil
-            --                         local gem = GameObject {
-            --                             texture = 'gems',
-            --                             x = (x - 1) * TILE.SIZE,
-            --                             y = (blockHeight - 1) * TILE.SIZE - 4,
-            --                             width = 16,
-            --                             height = 16,
-            --                             frame = math.random(#GEMS),
-            --                             collidable = true,
-            --                             consumable = true,
-            --                             solid = false,
+                                    -- maintain reference so we can set it to nil
+                                    local gem = GameObject {
+                                        texture = 'gems',
+                                        x = (x - 1) * TILE.SIZE,
+                                        y = (blockHeight - 1) * TILE.SIZE - 4,
+                                        width = 16,
+                                        height = 16,
+                                        frame = math.random(#GEMS),
+                                        collidable = true,
+                                        consumable = true,
+                                        solid = false,
 
-            --                             -- gem has its own function to add to the player's score
-            --                             onConsume = function(player, object)
-            --                                 player.score = player.score + 100
-            --                             end
-            --                         }
-                                    
+                                        -- gem has its own function to add to the player's score
+                                        onConsume = function(player, object)
+                                            -- player.score = player.score + 100
+                                        end
+                                    }
 
-            --                         table.insert(objects, gem)
-            --                     end
+                                    Timer.tween(0.1, {
+                                        [gem] = {y = (blockHeight - 2) * TILE.SIZE}
+                                    })
 
-            --                     obj.hit = true
-            --                 end
+                                    table.insert(objects, gem)
+                                end
 
-            --             end
-            --         }
-            --     )
-            -- end
+                                obj.hit = true
+                            end
+
+                        end
+                    }
+                )
+            end
         end
     end
 
