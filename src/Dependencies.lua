@@ -8,6 +8,7 @@ require 'src/Constants'
 require 'src/Entity'
 require 'src/StateMachine'
 require 'src/Tile'
+require 'src/Snail'
 require 'src/TileMap'
 require 'src/Player'
 require 'src/GameObject'
@@ -20,6 +21,9 @@ require 'src/states/PlayerFallingState'
 require 'src/states/PlayerIdleState'
 require 'src/states/PlayerJumpState'
 require 'src/states/PlayerWalkingState'
+require 'src/states/SnailChasingState'
+require 'src/states/SnailIdleState'
+require 'src/states/SnailMovingState'
 
 gTextures = {
     ['tiles'] = love.graphics.newImage('assets/tiles.png'),

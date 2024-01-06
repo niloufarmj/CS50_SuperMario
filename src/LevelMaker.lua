@@ -110,7 +110,7 @@ function LevelMaker.generate(width, height)
                             if not obj.hit then
 
                                 -- chance to spawn gem, not guaranteed
-                                if math.random(4) == 1 then
+                                if math.random(3) == 1 then
 
                                     -- maintain reference so we can set it to nil
                                     local gem = GameObject {
@@ -126,7 +126,7 @@ function LevelMaker.generate(width, height)
 
                                         -- gem has its own function to add to the player's score
                                         onConsume = function(player, object)
-                                            -- player.score = player.score + 100
+                                            player.score = player.score + 100
                                         end
                                     }
 

@@ -39,6 +39,10 @@ CHARACTER = {
     WALK_SPEED = 50
 }
 
+SNAIL = {
+    WALK_SPEED = 10
+}
+
 
 GRAVITY = 6
 
@@ -63,6 +67,6 @@ GEMS = {
 
 JUMP_BLOCKS = {}
 
-for i = 1, 30 do
+for i = 1, 12 do
     table.insert(JUMP_BLOCKS, i)
 end
