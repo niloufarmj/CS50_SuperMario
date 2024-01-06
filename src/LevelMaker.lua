@@ -126,6 +126,7 @@ function LevelMaker.generate(width, height)
 
                                         -- gem has its own function to add to the player's score
                                         onConsume = function(player, object)
+                                            gSounds['pickup']:play()
                                             player.score = player.score + 100
                                         end
                                     }
@@ -133,12 +134,15 @@ function LevelMaker.generate(width, height)
                                     Timer.tween(0.1, {
                                         [gem] = {y = (blockHeight - 2) * TILE.SIZE}
                                     })
+                                    gSounds['powerup-reveal']:play()
+
 
                                     table.insert(objects, gem)
                                 end
 
                                 obj.hit = true
                             end
+                            gSounds['empty-block']:play()
 
                         end
                     }

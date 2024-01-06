@@ -35,6 +35,7 @@ function PlayerFallingState:update(dt)
     
     -- go back to start if we fall below the map boundary
     elseif self.player.y > WINDOW.VIRTUAL_HEIGHT then
+        gSounds['death']:play()
         gStateMachine:change('start')
     
     -- check side collisions and reset position
@@ -70,6 +71,8 @@ function PlayerFallingState:update(dt)
     -- check if we've collided with any entities and kill them if so
     for k, entity in pairs(self.player.level.entities) do
         if entity:collides(self.player) then
+            gSounds['kill']:play()
+            gSounds['kill2']:play()
             self.player.score = self.player.score + 100
             table.remove(self.player.level.entities, k)
         end

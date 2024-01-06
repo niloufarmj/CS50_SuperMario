@@ -61,3 +61,14 @@ gFonts = {
     ['large'] = love.graphics.newFont('assets/font.ttf', 24)
 }
 
+gSounds = {
+    ['jump'] = love.audio.newSource('assets/jump.wav', 'static'),
+    ['death'] = love.audio.newSource('assets/death.wav', 'static'),
+    ['music'] = love.audio.newSource('assets/music.wav', 'static'),
+    ['powerup-reveal'] = love.audio.newSource('assets/powerup-reveal.wav', 'static'),
+    ['pickup'] = love.audio.newSource('assets/pickup.wav', 'static'),
+    ['empty-block'] = love.audio.newSource('assets/empty-block.wav', 'static'),
+    ['kill'] = love.audio.newSource('assets/kill.wav', 'static'),
+    ['kill2'] = love.audio.newSource('assets/kill2.wav', 'static')
+}
+

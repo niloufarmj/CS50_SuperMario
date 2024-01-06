@@ -11,6 +11,7 @@ function PlayerJumpState:init(player)
 end
 
 function PlayerJumpState:enter(params)
+    gSounds['jump']:play()
     self.player.dy = CHARACTER.JUMP_SPEED
 end
 
@@ -65,6 +66,7 @@ function PlayerJumpState:update(dt)
     -- check if we've collided with any entities and die if so
     for k, entity in pairs(self.player.level.entities) do
         if entity:collides(self.player) then
+            gSounds['death']:play()
             gStateMachine:change('start')
         end
     end
